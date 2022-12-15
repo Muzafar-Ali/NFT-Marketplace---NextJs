@@ -120,11 +120,46 @@ export const NFTMarketplaceProvider = ({children}) =>{
         }
     }
 
+    // FETCH NFTS
+    const fetchNFTs = async()=>{
+        try {
+            const provider = new ethers.providers.JsonRpcProvider();
+            const contract = fetchContract(provider);
+
+            const data = await contract.fetchMarketItem();
+            //console.log('DATA', data)
+            
+            const items = await Promise.all(
+                data.map(async({tokenId, seller, owner, price:unformattedPrice, })=>{
+                    const tokenUri = await contract.tokenURI(tokenId);
+                    const {data: {image, name, description},} = await axios.get(tokenUri);
+                    const price = ethers.utils.formatUnits(unformattedPrice.toString(),'ether');
+                    return {
+                        price,
+                        tokenId: tokenId.toNumber(),
+                        seller,
+                        owner,
+                        image,
+                        name,
+                        description,
+                        tokenUri
+                    };
+                })
+            );
+            return items
+        } catch (error) {
+            console.log('Error while fetching NFTs',error)
+        }
+    }
+
+    fetchNFTs()
+
     return(
         <NFTMarketplaceContext.Provider value={{
             connectWallet,
             uploadToIpfs,
             createNFT,
+            fetchNFTs,
             titleData
         }}
         >

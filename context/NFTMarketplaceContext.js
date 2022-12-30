@@ -10,8 +10,8 @@ import { create as ipfsHttpClient } from 'ipfs-http-client'
 const projectId = '*************';
 const projectSecretKey = '*********************';
 const auth = `Basic ${Buffer.from(`${projectId}:${projectSecretKey}`).toString('base64')}`;
-console.log('Authorization : ',auth);
 const subDomain = 'https://muzafar-nft-marketplace.infura-ipfs.io'
+
 //create IPFS client 
 const client = ipfsHttpClient({
     host:'infura-ipfs.io:',

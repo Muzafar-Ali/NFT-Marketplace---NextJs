@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
-import Router from 'next/router'
+import { useRouter } from 'next/router'
 import axios from 'axios'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
 
@@ -52,11 +52,12 @@ export const NFTMarketplaceContext = React.createContext();
  
 export const NFTMarketplaceProvider = ({children}) =>{
     const titleData = "Discover, collect and Sell NFTs"
-
-    //we want to get address of wallet whoever connects/interacts with NFT marketplace
+    // USESTATE
+    // we want to get address of wallet whoever connects/interacts with NFT marketplace
     const [currentAccount, setCurrentAccount] = useState()
+    const router = useRouter();
     
-    //this functions checks wether user is connected to application or not
+    //following function checks wether user is connected to application or not
     const checkIfWalletConnected= async()=>{
         try {
             if(!window.ethereum) return console.log('Pleass Install MetaMask Wallet')
@@ -103,11 +104,10 @@ export const NFTMarketplaceProvider = ({children}) =>{
     }
 
     // CREATE NFT
-    const createNFT = async(forminput, fileUrl, router)=>{
+    const createNFT = async(name, price, image, description, router)=>{
         try {
-            const {name, description, price} = forminput;
-            if(!name || !description || !price || !fileUrl) return console.log("some data is missing")
-            const data = JSON.stringify({name, description, image: fileUrl})
+            if(!name || !description || !price || !image) return console.log("some data is missing")
+            const data = JSON.stringify({name, description, image})
 
             try {
                 const added = client.add(data);
@@ -132,8 +132,9 @@ export const NFTMarketplaceProvider = ({children}) =>{
                 ? await contract.createToken(url, price, {value: listingPrice.toString()})
                 : await contract.reSellToken(url, price, {value: listingPrice.toString()});
             transaction.wait();
+            router.push('/searchPage')
         } catch (error) {
-            console.log("Error while creatins Sale :",error)
+            console.log("Error while creating Sale :",error)
         }
     }
 

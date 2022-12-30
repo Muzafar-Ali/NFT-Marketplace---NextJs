@@ -27,6 +27,7 @@ const DropZone = ({
     const url = await uploadToIpfs(acceptedFile[0]);
     setFileUrl(url);
     setImage(url);
+    console.log('Image URl - DropZone :', url);
   });
 
   const { getRootProps, getInputProps } = useDropzone({

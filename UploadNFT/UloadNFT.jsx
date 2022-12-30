@@ -214,7 +214,18 @@ const router = useRouter();
           <Button
             btnName="Upload"
             handleClick={async() => 
-              createNFT(name, price, image, description, router, website, royalties, fileSize, category, properties)}
+              createNFT(
+                name, 
+                price, 
+                image, 
+                description, 
+                router, 
+                // website, 
+                // royalties, 
+                // fileSize, 
+                // category, 
+                // properties
+                )}
             classStyle={Style.upload_box_btn_style}
           />
           <Button
